@@ -22,19 +22,32 @@ p_init, q_init, r_init = 0., 0., 0.
 psi_init, theta_init, phi_init = 0., 0., 0.
 xe_init, ye_init, ze_init = 0., 0., 0.
 
+x_init, x1dot_init = 0., 1.
+y_init, y1dot_init = 0., 0.
+z_init, z1dot_init = 0., 0.
+phi_init, phi1dot_init = 0., 0.
+theta_init, theta1dot_init = 0., 0.
+psi_init, psi1dot_init = 0., 0.
+
 # initial conditions
 theta, phi, psi, x1dot, y1dot, z1dot, x2dot, y2dot, z2dot = 0.05, 0., 0., 10., 0., 0., 0., 0., 0.
 
 # inertial
-Ixx, Iyy, Izz, mass = 1., 1., 1., 1.
-Iyz, Izx, Ixy, Ixz = 1., 1., 1., 1.
+Ixx, Iyy, Izz, mass = 12874.8472, 75673.623, 85552.1125, 1. #m^2kg, kg
+Iyz, Izx, Ixy, Ixz = 0., 1331.41323, 0., 1331.41323
+T_max = 12150 #kg, max thrust
+length = 14.8 #m
+height = 4.8 #m
+mean_aerodynamic_chord = 3.450336 #m
+wing_area = 27.8709 #m^2
+
 
 # simulation
 time_step, time_start, time_end, g = 0.001, 0., 10., 9.81
 
 # wrap for input
-initial_state_vector = [U_init, V_init, W_init, p_init, q_init, r_init, psi_init, theta_init, phi_init, xe_init, ye_init, ze_init]
-initial_conditions = [theta, phi, psi, x1dot, y1dot, z1dot, x2dot, y2dot, z2dot]
+initial_state_vector = [x_init, x1dot_init, y_init, y1dot_init, z_init, z1dot_init, phi_init, phi1dot_init, theta_init, theta1dot_init, psi_init, psi1dot_init]
+#initial_conditions = [theta, phi, psi, x1dot, y1dot, z1dot, x2dot, y2dot, z2dot]
 aircraft_properties = [Ixx, Iyy, Izz, mass, Iyz, Izx, Ixy, Ixz]
 simulation_parameters = [time_step, time_start, time_end, g]
 
@@ -313,18 +326,18 @@ class F_16:
     
     def __init__(self, initial_state_vector):
         
-        self.U = initial_state_vector[0]
-        self.V = initial_state_vector[1]
-        self.W = initial_state_vector[2]
-        self.p = initial_state_vector[3]
-        self.q = initial_state_vector[4]
-        self.r = initial_state_vector[5]
-        self.psi = initial_state_vector[6]
-        self.theta = initial_state_vector[7]
-        self.phi = initial_state_vector[8]
-        self.xe = initial_state_vector[9]
-        self.ye = initial_state_vector[10]
-        self.ze = initial_state_vector[11]
+        self.x = initial_state_vector[0]
+        self.x1dot = initial_state_vector[1]
+        self.y = initial_state_vector[2]
+        self.y1dot = initial_state_vector[3]
+        self.z = initial_state_vector[4]
+        self.z1dot = initial_state_vector[5]
+        self.phi = initial_state_vector[6]
+        self.phi1dot = initial_state_vector[7]
+        self.theta = initial_state_vector[8]
+        self.theta1dot = initial_state_vector[9]
+        self.psi = initial_state_vector[10]
+        self.psi1dot = initial_state_vector[11]
     
     def sim(self, aircraft_properties, initial_conditions, nonlinear_parameters, simulation_parameters):
         
@@ -341,7 +354,7 @@ class F_16:
         phi, phi1dot, phi2dot = np.zeros(len(rng)), np.zeros(len(rng)), np.zeros(len(rng))
         psi, psi1dot, psi2dot = np.zeros(len(rng)), np.zeros(len(rng)), np.zeros(len(rng))
         
-        theta[0], phi[0], psi[0], x1dot[0], y1dot[0], z1dot[0], x2dot[0], y2dot[0], z2dot[0] = initial_conditions
+        #theta[0], phi[0], psi[0], x1dot[0], y1dot[0], z1dot[0], x2dot[0], y2dot[0], z2dot[0] = initial_conditions
         
         # test values
         span = 10.
@@ -354,9 +367,9 @@ class F_16:
         for idx, t in enumerate(rng):
             #print(idx)
             
-            pbar = self.p*span/(2*V)
-            qbar = self.q*ref_chord/(2*V)
-            rbar = self.r*span/(2*V)
+            pbar = self.phi1dot*span/(2*V)
+            qbar = self.theta1dot*ref_chord/(2*V)
+            rbar = self.psi1dot*span/(2*V)
             
             # self.q =/= q      
             ''' Coefficients '''
