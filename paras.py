@@ -7,7 +7,7 @@ Created on Sun Sep 27 10:35:53 2020
 """
 
 # In[initial conditions] 
-x_init, x1dot_init = 0., 10.
+x_init, x1dot_init = 0., 100.
 y_init, y1dot_init = 0., 0.
 z_init, z1dot_init = 0., 0.
 phi_init, phi1dot_init = 0., 0.
@@ -24,7 +24,7 @@ mean_aerodynamic_chord = 3.450336 #m
 wing_area = 27.8709 #m^2
 wingspan = 9.144 #m
 xcgref = 0.35*mean_aerodynamic_chord #m
-xcg = xcgref*1.05
+xcg = xcgref*1.
 
 # In[simulation parameters]
 time_step, time_start, time_end, g, rho = 0.001, 0., 10., 9.81, 1.225
@@ -165,9 +165,8 @@ def global_nonlinear_model_parameters():
     
     return(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s)
 
-nonlinear_parameters = global_nonlinear_model_parameters()
-
 # In[wrap for input]
+nonlinear_parameters = global_nonlinear_model_parameters()
 initial_state_vector = [x_init, x1dot_init, y_init, y1dot_init, z_init, z1dot_init, phi_init, phi1dot_init, theta_init, theta1dot_init, psi_init, psi1dot_init]
 aircraft_properties = [Ixx, Iyy, Izz, mass, Iyz, Izx, Ixy, Ixz, mean_aerodynamic_chord, wingspan, wing_area, mean_aerodynamic_chord, wing_area, wingspan, xcgref, xcg, T_max]
 simulation_parameters = [time_step, time_start, time_end, g, rho]
